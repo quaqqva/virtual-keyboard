@@ -4,7 +4,7 @@
   "description": "Virtual Keyboard app for the Rolling Scopes School",
   "main": "index.js",
   "scripts": {
-    "serve": "webpack serve",
+    "server": "webpack serve",
     "build:dev": "set NODE_ENV=development&&webpack",
     "build:prod": "set NODE_ENV=production&&webpack"
   },
@@ -32,6 +32,8 @@
     "webpack-dev-server": "^4.15.0"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.12.1"
+    "@babel/polyfill": "^7.12.1",
+    "normalize.css": "^8.0.1",
+    "sass": "^1.62.1"
   }
 }

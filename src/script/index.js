@@ -1,5 +1,5 @@
 import '../layout/index.html';
-// import '../sass/main.scss';
+import '../sass/main.scss';
 import Keyboard from './keyboard';
 import LayoutBuilder from './page-builder';
 

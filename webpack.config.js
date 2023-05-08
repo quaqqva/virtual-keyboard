@@ -1,7 +1,7 @@
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const postcssPresetEnv = require('postcss-preset-env');
+const postCssPresetEnv = require('postcss-preset-env');
 
 const buildMode = process.env.NODE_ENV || 'development';
 const isDevMode = buildMode === 'development';
@@ -20,6 +20,7 @@ module.exports = {
   },
   output: {
     filename: 'main.js',
+    assetModuleFilename: 'assets/[name][ext][query]',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
@@ -28,7 +29,7 @@ module.exports = {
       template: path.resolve(__dirname, 'src', 'layout', 'index.html'),
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].css',
+      filename: 'styles.css',
     }),
   ],
   module: {
@@ -43,10 +44,10 @@ module.exports = {
           isDevMode ? 'style-loader' : MiniCssExtractPlugin.loader,
           'css-loader',
           {
-            loader: 'post-css-loader',
+            loader: 'postcss-loader',
             options: {
               postcssOptions: {
-                plugins: postcssPresetEnv,
+                plugins: [postCssPresetEnv],
               },
             },
           },
