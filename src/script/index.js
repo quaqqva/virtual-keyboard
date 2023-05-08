@@ -25,13 +25,15 @@ function getTextAreaData() {
 const outputHandler = {
   handleEvent(event) {
     event.preventDefault();
-    const { textArea, textValue, cursorStart } = getTextAreaData();
-    textArea.value = textValue.substring(0, cursorStart) + keyboard.lastOutput
-      + textValue.substring(cursorStart);
-    if (keyboard.lastOutput.length > 0) {
-      textArea.selectionStart = cursorStart + keyboard.lastOutput.length;
-      textArea.selectionEnd = cursorStart + keyboard.lastOutput.length;
-    }
+    setTimeout(() => {
+      const { textArea, textValue, cursorStart } = getTextAreaData();
+      textArea.value = textValue.substring(0, cursorStart) + keyboard.lastOutput
+        + textValue.substring(cursorStart);
+      if (keyboard.lastOutput.length > 0) {
+        textArea.selectionStart = cursorStart + keyboard.lastOutput.length;
+        textArea.selectionEnd = cursorStart + keyboard.lastOutput.length;
+      }
+    }, 50);
   },
 };
 
