@@ -78,7 +78,9 @@
 
 .keyboard__button_active,
 .keyboard__button:active {
-  transform: scale(0.9);
+  position: relative;
+  top: 2px;
+  box-shadow: 0 1px darken($border-key-color, 10);
   transition-duration: $transition-time-click;
 }
   
