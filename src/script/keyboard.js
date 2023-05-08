@@ -62,6 +62,8 @@ export default class Keyboard {
 
   caseEventHandler = this.caseHandler.bind(this);
 
+  shiftHandler = this.switchShift.bind(this);
+
   constructor(language) {
     this.language = language;
     this.table = language === 'en' ? TABLE_ENG : TABLE_RUS;
@@ -198,6 +200,13 @@ export default class Keyboard {
     this.addOnClickListener({ handleEvent: this.caseEventHandler });
     this.addOnClickListener({ handleEvent: this.languageSwitchClickHandler.bind(this) });
     this.findButton('LangSwitch').addEventListener('click', this.switchLanguage.bind(this));
+
+    const leftShiftButton = this.findButton('ShiftLeft');
+    const rightShiftButton = this.findButton('ShiftRight');
+    leftShiftButton.addEventListener('mousedown', this.shiftHandler);
+    rightShiftButton.addEventListener('mousedown', this.shiftHandler);
+    rightShiftButton.addEventListener('mouseup', this.shiftHandler);
+    leftShiftButton.addEventListener('mouseup', this.shiftHandler);
   }
 
   addOnClickListener(listener) {
@@ -238,6 +247,13 @@ export default class Keyboard {
     if (pressedButton && event.type === 'keyup') pressedButton.classList.remove('keyboard__button_active');
   }
 
+  switchShift() {
+    this.isShift = !this.isShift;
+    this.toggleShiftAnimation();
+    this.toggleCase();
+    this.getTable();
+  }
+
   caseHandler(event) {
     if (event.repeat) return;
     if ((event.type === 'keydown' && event.code === 'CapsLock') || event.target.dataset.keycode === 'CapsLock') {
@@ -247,12 +263,7 @@ export default class Keyboard {
       this.isCaps = !this.isCaps;
       this.getTable();
     }
-    if ((event.code && event.code.substring(0, 5) === 'Shift')) {
-      this.isShift = !this.isShift;
-      this.toggleShiftAnimation();
-      this.toggleCase();
-      this.getTable();
-    }
+    if ((event.code && event.code.substring(0, 5) === 'Shift')) this.switchShift();
   }
 
   isAlt() {
