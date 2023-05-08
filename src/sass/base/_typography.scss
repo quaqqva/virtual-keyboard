@@ -2,7 +2,7 @@ html {
   font-family: "Tahoma", sans-serif;
   color: $font-color-primary;  
   @media (max-width: $mobile-width) {
-    font-size: 3px;
+    font-size: 7.5px;
   }
   @media (min-width: $mobile-width) {
     font-size: 8px;
