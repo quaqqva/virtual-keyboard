@@ -60,10 +60,13 @@ export default class Keyboard {
 
   BUTTON_TRANSITION = 300;// ms
 
+  caseEventHandler = this.caseHandler.bind(this);
+
   constructor(language) {
     this.language = language;
     this.table = language === 'en' ? TABLE_ENG : TABLE_RUS;
     this.isCaps = false;
+    this.isShift = false;
     this.loadLayout();
     this.addDocListeners();
   }
@@ -107,6 +110,11 @@ export default class Keyboard {
       }
     });
 
+    if (this.isCaps) {
+      const capsButton = this.findButton('CapsLock');
+      capsButton.classList.toggle('keyboard__caps-lock_active');
+    }
+
     if (oldLayout) {
       const event = new Event('layoutChange', { bubbles: true });
       oldLayout.dispatchEvent(event);
@@ -118,29 +126,30 @@ export default class Keyboard {
   switchLanguage() {
     this.language = this.language === 'en' ? 'ru' : 'en';
     this.getTable(true);
-
     localStorage.setItem('keyboardLanguage', this.language);
     Array.from(this.layoutElement.children).forEach((row) => {
       const alphaNumerics = Array.from(row.children)
         .filter((button) => button.classList.length === 1);
       for (let i = 0; i < alphaNumerics.length; i += 1) alphaNumerics[i].style = 'transform: rotate(360deg)';
     });
-    setTimeout(() => this.loadLayout(), this.BUTTON_TRANSITION - 50);
+
+    setTimeout(() => {
+      this.loadLayout();
+    }, this.BUTTON_TRANSITION - 50);
   }
 
-  getTable(ignoreShift) {
+  getTable() {
     this.table = this.language === 'en' ? TABLE_ENG : TABLE_RUS;
-    const isShift = this.isShift() && !ignoreShift;
-    if ((this.isCaps || isShift)
-     && !(this.isCaps && isShift)) { this.table = this.table.toUpperCase(); }
+    if ((this.isCaps || this.isShift)
+     && !(this.isCaps && this.isShift)) { this.table = this.table.toUpperCase(); }
   }
 
   toggleCase() {
-    this.getTable(false);
     // for animation:
     // find all letter keys
     let alphabet = this.language === 'en' ? 'abcdefghijklmnopqrstuvwxyz' : 'абвгдеёжзийклмнопрстуфхцчшщьъыэюя';
-    const upperCase = this.findButton(alphabet[0].toUpperCase()) !== null;
+    const upperCase = (this.isCaps && this.isShift)
+     || this.findButton(alphabet[0].toUpperCase()) !== null;
     if (upperCase) alphabet = alphabet.toUpperCase();
     const letterKeys = [];
     Array.from(this.layoutElement.children).forEach((row) => {
@@ -168,23 +177,25 @@ export default class Keyboard {
     });
     // Change span styles
     spanKeys.forEach((key) => {
-      key.querySelector('.keyboard-button__main-key').classList.toggle('keyboard-button__main-key_shift');
-      key.querySelector('.keyboard-button__additional-key').classList.toggle('keyboard-button__additional-key_shift');
+      const mainKeySpan = key.querySelector('.keyboard-button__main-key');
+      const additionalSpan = key.querySelector('.keyboard-button__additional-key');
+      mainKeySpan.classList.toggle('keyboard-button__main-key_shift');
+      additionalSpan.classList.toggle('keyboard-button__additional-key_shift');
     });
   }
 
   addDocListeners() {
     document.addEventListener('keydown', this.highlightHandler.bind(this));
     document.addEventListener('keydown', this.registerOutput.bind(this));
+    document.addEventListener('keydown', this.caseEventHandler);
+    document.addEventListener('keyup', this.caseEventHandler);
     document.addEventListener('keydown', this.languageSwitchClickHandler.bind(this));
-    document.addEventListener('keydown', this.caseHandler.bind(this));
-    document.addEventListener('keyup', this.caseHandler.bind(this));
     document.addEventListener('keyup', this.highlightHandler.bind(this));
   }
 
   addLayoutListeners() {
     this.addOnClickListener({ handleEvent: this.registerOutput.bind(this) });
-    this.addOnClickListener({ handleEvent: this.caseHandler.bind(this) });
+    this.addOnClickListener({ handleEvent: this.caseEventHandler });
     this.addOnClickListener({ handleEvent: this.languageSwitchClickHandler.bind(this) });
     this.findButton('LangSwitch').addEventListener('click', this.switchLanguage.bind(this));
   }
@@ -229,23 +240,19 @@ export default class Keyboard {
 
   caseHandler(event) {
     if (event.repeat) return;
-    if (event.type === 'keydown' && (event.code === 'CapsLock' || event.target.dataset.keycode === 'CapsLock')) {
-      this.isCaps = !this.isCaps;
+    if ((event.type === 'keydown' && event.code === 'CapsLock') || event.target.dataset.keycode === 'CapsLock') {
       const capsButton = this.findButton('CapsLock');
       capsButton.classList.toggle('keyboard__caps-lock_active');
       this.toggleCase();
+      this.isCaps = !this.isCaps;
+      this.getTable();
     }
-    if (event.code && event.code.substring(0, 5) === 'Shift') {
-      this.toggleCase();
+    if ((event.code && event.code.substring(0, 5) === 'Shift')) {
+      this.isShift = !this.isShift;
       this.toggleShiftAnimation();
+      this.toggleCase();
+      this.getTable();
     }
-  }
-
-  isShift() {
-    const leftShift = this.findButton('ShiftLeft');
-    const rightShift = this.findButton('ShiftRight');
-    return leftShift.matches('.keyboard__button_active') || leftShift.matches('.keyboard__button:active')
-     || rightShift.matches('.keyboard__button_active') || rightShift.matches('.keyboard__button:active');
   }
 
   isAlt() {
@@ -263,7 +270,7 @@ export default class Keyboard {
       this.lastOutput = '';
       return;
     }
-    const buttonContent = getButtonOutput({ button: pressedButton, isShift: this.isShift() });
+    const buttonContent = getButtonOutput({ button: pressedButton, isShift: this.isShift });
     this.lastOutput = buttonContent;
   }
 
@@ -285,6 +292,6 @@ export default class Keyboard {
   }
 
   languageSwitchClickHandler() {
-    if (this.isShift() && this.isAlt()) this.switchLanguage();
+    if (this.isShift && this.isAlt()) this.switchLanguage();
   }
 }
