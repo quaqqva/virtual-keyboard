@@ -136,10 +136,10 @@ export default class Keyboard {
   }
 
   toggleCase() {
-    this.getTable();
+    this.getTable(false);
     // for animation:
     // find all letter keys
-    let alphabet = this.language === 'en' ? 'abcdefghijklmnopqrstuvwxyz' : 'абвгдеёжзийклмнопрстуфхцчшщыэюя';
+    let alphabet = this.language === 'en' ? 'abcdefghijklmnopqrstuvwxyz' : 'абвгдеёжзийклмнопрстуфхцчшщьъыэюя';
     const upperCase = this.findButton(alphabet[0].toUpperCase()) !== null;
     if (upperCase) alphabet = alphabet.toUpperCase();
     const letterKeys = [];
@@ -235,7 +235,7 @@ export default class Keyboard {
       capsButton.classList.toggle('keyboard__caps-lock_active');
       this.toggleCase();
     }
-    if (event.code.substring(0, 5) === 'Shift') {
+    if (event.code && event.code.substring(0, 5) === 'Shift') {
       this.toggleCase();
       this.toggleShiftAnimation();
     }
