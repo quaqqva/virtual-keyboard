@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "Virtual Keyboard app for the Rolling Scopes School",
   "main": "index.js",
+  "repository": {
+    "url": "git+https://github.com/QuaqvaGit/virtual-keyboard.git"
+  },
   "scripts": {
     "server": "webpack serve",
     "build:dev": "set NODE_ENV=development&&webpack",
-    "build:prod": "set NODE_ENV=production&&webpack"
+    "build:prod": "set NODE_ENV=production&&webpack",
+    "deploy": "gh-pages -d dist"
   },
   "keywords": [],
   "author": "Quaqva",
@@ -19,6 +23,7 @@
     "eslint": "^8.40.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
+    "gh-pages": "^5.0.0",
     "html-loader": "^4.2.0",
     "html-webpack-plugin": "^5.5.1",
     "mini-css-extract-plugin": "^2.7.5",
