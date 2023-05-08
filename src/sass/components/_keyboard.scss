@@ -83,4 +83,11 @@
   box-shadow: 0 1px darken($border-key-color, 10);
   transition-duration: $transition-time-click;
 }
+
+.keyboard__caps-lock_active {
+  background-color: $caps-lock-active-color;
+  color: $bg-key-color;
+  border: 2px solid darken($caps-lock-active-color, 10);
+  box-shadow: 0 4px darken($caps-lock-active-color, 20);
+}
   

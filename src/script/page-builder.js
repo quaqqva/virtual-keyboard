@@ -16,10 +16,8 @@ export default class LayoutBuilder {
   }
 
   languageSwitchHandler() {
-    setTimeout(() => {
-      this.main.removeChild(this.main.lastChild);
-      this.main.append(this.keyboard.getLayout());
-    }, this.keyboard.BUTTON_TRANSITION - 50);
+    this.main.removeChild(this.main.lastChild);
+    this.main.append(this.keyboard.getLayout());
   }
 
   build() {
@@ -27,6 +25,6 @@ export default class LayoutBuilder {
     this.main = document.body.querySelector('main');
     this.placeTextArea();
     this.main.append(this.keyboard.getLayout());
-    document.addEventListener('langSwitch', this.languageSwitchHandler.bind(this));
+    document.addEventListener('layoutChange', this.languageSwitchHandler.bind(this));
   }
 }

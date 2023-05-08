@@ -145,13 +145,11 @@ function addLayoutListeners(firstTime) {
 }
 
 function languageSwitchHandler() {
-  setTimeout(() => {
-    addLayoutListeners(false);
-  }, keyboard.BUTTON_TRANSITION - 50);
+  addLayoutListeners(false);
 }
 
 function addKeyboardListeners(firstTime) {
-  document.addEventListener('langSwitch', () => {
+  document.addEventListener('layoutChange', () => {
     languageSwitchHandler();
   });
   addLayoutListeners(firstTime);
