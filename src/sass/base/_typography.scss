@@ -17,12 +17,22 @@ html {
 
 .keyboard__button {
   font-weight: 900;
+  
+  span {
+    transition: $transition-time-click linear;
+  }
 }
 
 .keyboard-button__main-key{
   position: relative;
   right: 0.325rem;
 }
+
+.keyboard-button__main-key_shift {
+  font-size: 0.75rem;
+  top: 10%;
+}
+
 
 .keyboard-button__additional-key {
   font-weight: 500;
@@ -31,4 +41,10 @@ html {
   bottom: 25%;
   right:25%;
   padding-left: 0.5rem;
+}
+
+.keyboard-button__additional-key_shift {
+  font-size: 1rem;
+  bottom: 15%;
+  font-weight: 900;
 }

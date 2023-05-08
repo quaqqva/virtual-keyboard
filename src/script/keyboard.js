@@ -112,8 +112,6 @@ export default class Keyboard {
       oldLayout.dispatchEvent(event);
     }
 
-    if (this.isCaps) this.findButton('CapsLock').classList.toggle('keyboard__caps-lock_active');
-
     this.addLayoutListeners();
   }
 
@@ -139,7 +137,40 @@ export default class Keyboard {
 
   toggleCase() {
     this.getTable();
-    this.loadLayout();
+    // for animation:
+    // find all letter keys
+    let alphabet = this.language === 'en' ? 'abcdefghijklmnopqrstuvwxyz' : 'абвгдеёжзийклмнопрстуфхцчшщыэюя';
+    const upperCase = this.findButton(alphabet[0].toUpperCase()) !== null;
+    if (upperCase) alphabet = alphabet.toUpperCase();
+    const letterKeys = [];
+    Array.from(this.layoutElement.children).forEach((row) => {
+      const filteredKeys = Array.from(row.children)
+        .filter((button) => {
+          const buttonOutput = getButtonOutput({ button, isShift: false });
+          return buttonOutput.length === 1 && alphabet.includes(buttonOutput);
+        });
+      letterKeys.push(...filteredKeys);
+    });
+    // Change content
+    letterKeys.forEach((key) => {
+      const curKey = key;
+      curKey.innerHTML = upperCase ? key.innerHTML.toLowerCase() : key.innerHTML.toUpperCase();
+    });
+  }
+
+  toggleShiftAnimation() {
+    // Find all 2-span keys
+    const spanKeys = [];
+    Array.from(this.layoutElement.children).forEach((row) => {
+      const filteredKeys = Array.from(row.children)
+        .filter((button) => button.querySelector('.keyboard-button__additional-key'));
+      spanKeys.push(...filteredKeys);
+    });
+    // Change span styles
+    spanKeys.forEach((key) => {
+      key.querySelector('.keyboard-button__main-key').classList.toggle('keyboard-button__main-key_shift');
+      key.querySelector('.keyboard-button__additional-key').classList.toggle('keyboard-button__additional-key_shift');
+    });
   }
 
   addDocListeners() {
@@ -200,9 +231,14 @@ export default class Keyboard {
     if (event.repeat) return;
     if (event.type === 'keydown' && (event.code === 'CapsLock' || event.target.dataset.keycode === 'CapsLock')) {
       this.isCaps = !this.isCaps;
+      const capsButton = this.findButton('CapsLock');
+      capsButton.classList.toggle('keyboard__caps-lock_active');
       this.toggleCase();
     }
-    if (event.code.substring(0, 5) === 'Shift') this.toggleCase();
+    if (event.code.substring(0, 5) === 'Shift') {
+      this.toggleCase();
+      this.toggleShiftAnimation();
+    }
   }
 
   isShift() {
