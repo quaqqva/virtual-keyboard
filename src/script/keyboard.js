@@ -165,6 +165,7 @@ export default class Keyboard {
     // Change content
     letterKeys.forEach((key) => {
       const curKey = key;
+      curKey.style = `transform: ${upperCase ? 'none' : 'rotate(360deg)'}`;
       curKey.innerHTML = upperCase ? key.innerHTML.toLowerCase() : key.innerHTML.toUpperCase();
     });
   }
