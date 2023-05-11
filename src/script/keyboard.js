@@ -127,12 +127,14 @@ export default class Keyboard {
 
   switchLanguage() {
     this.language = this.language === 'en' ? 'ru' : 'en';
+    const nonDependentPrimaries = '890-=';
     this.getTable(true);
     localStorage.setItem('keyboardLanguage', this.language);
     Array.from(this.layoutElement.children).forEach((row) => {
-      const alphaNumerics = Array.from(row.children)
-        .filter((button) => button.classList.length === 1);
-      for (let i = 0; i < alphaNumerics.length; i += 1) alphaNumerics[i].style = 'transform: rotate(360deg)';
+      const languageDependentButtons = Array.from(row.children)
+        .filter((button) => button.classList.length === 1
+         && !(nonDependentPrimaries.includes(getButtonOutput({ button, isShift: false }))));
+      for (let i = 0; i < languageDependentButtons.length; i += 1) languageDependentButtons[i].style = 'transform: rotate(360deg)';
     });
 
     setTimeout(() => {
@@ -282,7 +284,9 @@ export default class Keyboard {
       this.lastOutput = '';
       return;
     }
-    const buttonContent = getButtonOutput({ button: pressedButton, isShift: this.isShift });
+    let buttonContent = getButtonOutput({ button: pressedButton, isShift: this.isShift });
+    if (buttonContent === '&lt;') buttonContent = '<';
+    if (buttonContent === '&gt;') buttonContent = '>';
     this.lastOutput = buttonContent;
   }
 

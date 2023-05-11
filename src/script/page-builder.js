@@ -3,6 +3,8 @@ import bodyLayout from '../layout/body.html';
 export default class LayoutBuilder {
   TEXTAREA_COLS = 70;
 
+  BUILD_DELAY = 50;
+
   constructor(keyboard) {
     this.keyboard = keyboard;
   }
