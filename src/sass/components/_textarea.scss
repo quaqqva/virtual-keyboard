@@ -1,0 +1,12 @@
+.output-area {
+  display:block;
+  width: 70ch;
+  max-width: 90%;
+  min-height: 150px;
+  height:40%;
+  margin:0 auto;
+  border:2px solid $color-secondary;
+  border-radius: 10px;
+  padding:1%;
+  line-height: 1rem;
+}

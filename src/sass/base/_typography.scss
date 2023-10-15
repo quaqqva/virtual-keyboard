@@ -1,0 +1,50 @@
+html {
+  font-family: "Tahoma", sans-serif;
+  color: $font-color-primary;  
+  @media (max-width: $mobile-width) {
+    font-size: 7.5px;
+  }
+  @media (min-width: $mobile-width) {
+    font-size: 8px;
+  }
+  @media (min-width: $tablet-width) {
+    font-size: 12px;
+  }
+  @media (min-width: $desktop-width) {
+    font-size: 16px;;
+  }
+}
+
+.keyboard__button {
+  font-weight: 900;
+  
+  span {
+    transition: $transition-time-click linear;
+  }
+}
+
+.keyboard-button__main-key{
+  position: relative;
+  right: 0.325rem;
+}
+
+.keyboard-button__main-key_shift {
+  font-size: 0.75rem;
+  top: 10%;
+}
+
+
+.keyboard-button__additional-key {
+  font-weight: 500;
+  font-size: 0.75rem;
+  position: relative;
+  bottom: 25%;
+  right:25%;
+  padding-left: 0.5rem;
+}
+
+.keyboard-button__additional-key_shift {
+  font-size: 1rem;
+  bottom: 15%;
+  font-weight: 900;
+}
