@@ -15,4 +15,4 @@
   - Webpack
 
 ## Ссылки
-  [Деплой](https://quaqvagit.github.io/virtual-keyboard/)
+  [Деплой](https://quaqqva.github.io/virtual-keyboard/)
